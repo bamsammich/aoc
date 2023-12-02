@@ -5,16 +5,22 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
 
 func New2023Day01Command() *cobra.Command {
 	return &cobra.Command{
-		Use:   "01",
+		Use:   "1",
 		Short: "2023 - Day 1",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return day01Solution()
+			start := time.Now()
+			if err := day01Solution(); err != nil {
+				return err
+			}
+			fmt.Printf("Runtime: %v\n", time.Now().Sub(start))
+			return nil
 		},
 	}
 }
