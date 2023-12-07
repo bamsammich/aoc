@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/echojc/aocutil v0.0.0-20211125040159-e71bcb34f68f
 	github.com/spf13/cobra v1.8.0
+	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
 )
 
 require (
