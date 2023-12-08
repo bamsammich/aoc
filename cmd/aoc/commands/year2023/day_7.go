@@ -76,11 +76,10 @@ func day07Solution() error {
 		s1 += round.bid * (rank + 1)
 	}
 
-	cardVals['J'] = 2
+	cardVals['J'] = 1
 	sort.Slice(rounds, sortFn)
 	s2 := 0
 	for rank, round := range rounds {
-		// fmt.Println(round.Pow(cardVals), round)
 		s2 += round.bid * (rank + 1)
 	}
 
@@ -108,9 +107,10 @@ func (rnd round) Pow(cardVals map[rune]int) int {
 		groups[i]++
 	}
 
-	if _, has := groups['J']; has && cardVals['J'] == 2 {
-		groups[utils.MaxValueKey(groups)] += groups['J']
+	if _, has := groups['J']; has && cardVals['J'] < cardVals['2'] {
+		jackCount := groups['J']
 		delete(groups, 'J')
+		groups[utils.MaxValueKey(groups)] += jackCount
 	}
 
 	counts := []int{}
@@ -138,6 +138,3 @@ func (rnd round) Pow(cardVals map[rune]int) int {
 	}
 
 }
-
-// 254035588 too high
-// 254078957 too high
