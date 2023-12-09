@@ -1,6 +1,10 @@
 package utils
 
-import "golang.org/x/exp/constraints"
+import (
+	"slices"
+
+	"golang.org/x/exp/constraints"
+)
 
 func MaxValueKey[M ~map[K]V, K constraints.Ordered, V constraints.Ordered](m M) K {
 	var (
@@ -14,4 +18,15 @@ func MaxValueKey[M ~map[K]V, K constraints.Ordered, V constraints.Ordered](m M) 
 		}
 	}
 	return key
+}
+
+func UniqueSlice[S []E, E comparable](s S) S {
+	out := S{}
+
+	for _, e := range s {
+		if !slices.Contains(out, e) {
+			out = append(out, e)
+		}
+	}
+	return out
 }
