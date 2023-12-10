@@ -54,7 +54,6 @@ func day9Diffs(nums []int) int {
 	for i := 0; i < len(nums)-1; i++ {
 		next[i] = nums[i+1] - nums[i]
 	}
-	fmt.Println(next)
 	if !slices.ContainsFunc(next, func(i int) bool { return i != 0 }) {
 		return nums[len(nums)-1]
 	}
