@@ -33,6 +33,7 @@ func New2023Command() *cobra.Command {
 		New2023Day07Command(),
 		New2023Day08Command(),
 		New2023Day09Command(),
+		New2023Day10Command(),
 	)
 	return cmd
 }
