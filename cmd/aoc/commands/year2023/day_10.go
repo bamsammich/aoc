@@ -3,8 +3,11 @@ package year2023
 import (
 	"fmt"
 	"image"
+	"slices"
+	"strings"
 	"time"
 
+	"github.com/bamsammich/aoc/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -67,8 +70,28 @@ func day010Solution() error {
 				)
 			}
 		}
+		lines[y] = strings.NewReplacer("7", "↰", "F", "↱", "J", "↲", "L", "↳").Replace(lines[y])
 	}
-	fmt.Println(diagram[start])
+	fmt.Println(start)
+	// s1 := 0
+	grid := updateGrid(make([][]string, len(lines)), len(lines[0]), start, "S")
+	for _, p := range bound(len(lines[0])-1, len(lines)-1, surrounding(start)...) {
+		if adj, ok := diagram[p]; ok && slices.Contains(adj, start) {
+			grid = updateGrid(grid, len(lines)-1, p, ".")
+			last := start
+			current := p
+			pipe := []image.Point{last, current}
+			for current != start {
+				grid = updateGrid(grid, len(lines)-1, current, strings.Split(lines[current.Y], "")[current.X])
+				nextE := slices.IndexFunc(diagram[current], func(p image.Point) bool { return current != last })
+				last = current
+				current = diagram[current][nextE]
+				pipe = append(pipe, current)
+
+				utils.Printlns(grid[0:30]...)
+			}
+		}
+	}
 	return nil
 }
 
@@ -81,4 +104,29 @@ func bound(xmax, ymax int, pts ...image.Point) []image.Point {
 	}
 
 	return out
+}
+
+func surrounding(pt image.Point) []image.Point {
+	return []image.Point{
+		{pt.X - 1, pt.Y + 1}, {pt.X, pt.Y + 1}, {pt.X + 1, pt.Y + 1},
+		{pt.X - 1, pt.Y}, {pt.X + 1, pt.Y},
+		{pt.X - 1, pt.Y - 1}, {pt.X, pt.Y - 1}, {pt.X + 1, pt.Y - 1},
+	}
+}
+
+func day10findStart(last, current, goal image.Point, diagram map[image.Point][]image.Point) []image.Point {
+	if current == goal {
+		return []image.Point{current}
+	}
+	nextE := slices.IndexFunc(diagram[current], func(p image.Point) bool { return p != last })
+	next := diagram[current][nextE]
+	return append([]image.Point{current}, day10findStart(current, next, goal, diagram)...)
+}
+
+func updateGrid(grid [][]string, xmax int, pt image.Point, value string) [][]string {
+	if grid[pt.Y] == nil {
+		grid[pt.Y] = strings.Split(strings.Repeat(" ", xmax), "")
+	}
+	grid[pt.Y][pt.X] = value
+	return grid
 }
