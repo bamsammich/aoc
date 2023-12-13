@@ -35,39 +35,28 @@ func day010Solution() error {
 	var start image.Point
 	for y := range lines {
 		for x, c := range lines[y] {
+			xmax, ymax := len(lines[y])-1, len(lines)-1
 			switch c {
 			case 'S':
 				start = image.Point{x, y}
 			case '|':
-				diagram[image.Point{x, y}] = bound(len(lines[y])-1, len(lines)-1,
-					image.Point{x, y - 1},
-					image.Point{x, y + 1},
-				)
+				diagram[image.Point{x, y}] = bound(xmax, ymax,
+					image.Point{x, y - 1}, image.Point{x, y + 1})
 			case '-':
-				diagram[image.Point{x, y}] = bound(len(lines[y])-1, len(lines)-1,
-					image.Point{x - 1, y},
-					image.Point{x + 1, y},
-				)
+				diagram[image.Point{x, y}] = bound(xmax, ymax,
+					image.Point{x - 1, y}, image.Point{x + 1, y})
 			case 'L':
-				diagram[image.Point{x, y}] = bound(len(lines[y])-1, len(lines)-1,
-					image.Point{x, y + 1},
-					image.Point{x + 1, y},
-				)
+				diagram[image.Point{x, y}] = bound(xmax, ymax,
+					image.Point{x, y + 1}, image.Point{x + 1, y})
 			case 'J':
-				diagram[image.Point{x, y}] = bound(len(lines[y])-1, len(lines)-1,
-					image.Point{x, y + 1},
-					image.Point{x - 1, y},
-				)
+				diagram[image.Point{x, y}] = bound(xmax, ymax,
+					image.Point{x, y + 1}, image.Point{x - 1, y})
 			case '7':
-				diagram[image.Point{x, y}] = bound(len(lines[y])-1, len(lines)-1,
-					image.Point{x, y - 1},
-					image.Point{x - 1, y},
-				)
+				diagram[image.Point{x, y}] = bound(xmax, ymax,
+					image.Point{x, y - 1}, image.Point{x - 1, y})
 			case 'F':
-				diagram[image.Point{x, y}] = bound(len(lines[y])-1, len(lines)-1,
-					image.Point{x, y - 1},
-					image.Point{x + 1, y},
-				)
+				diagram[image.Point{x, y}] = bound(xmax, ymax,
+					image.Point{x, y - 1}, image.Point{x + 1, y})
 			}
 		}
 		lines[y] = strings.NewReplacer("7", "↰", "F", "↱", "J", "↲", "L", "↳").Replace(lines[y])
