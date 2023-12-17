@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image"
 	"slices"
-	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -99,12 +98,4 @@ func day10findStart(last, current, goal image.Point, diagram map[image.Point][]i
 	nextE := slices.IndexFunc(diagram[current], func(p image.Point) bool { return p != last })
 	next := diagram[current][nextE]
 	return append([]image.Point{current}, day10findStart(current, next, goal, diagram)...)
-}
-
-func updateGrid(grid [][]string, xmax int, pt image.Point, value string) [][]string {
-	if grid[pt.Y] == nil {
-		grid[pt.Y] = strings.Split(strings.Repeat(" ", xmax), "")
-	}
-	grid[pt.Y][pt.X] = value
-	return grid
 }
