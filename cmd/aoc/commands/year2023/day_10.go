@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bamsammich/aoc/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -47,40 +46,30 @@ func day010Solution() error {
 					image.Point{x - 1, y}, image.Point{x + 1, y})
 			case 'L':
 				diagram[image.Point{x, y}] = bound(xmax, ymax,
-					image.Point{x, y + 1}, image.Point{x + 1, y})
+					image.Point{x, y - 1}, image.Point{x + 1, y})
 			case 'J':
 				diagram[image.Point{x, y}] = bound(xmax, ymax,
-					image.Point{x, y + 1}, image.Point{x - 1, y})
+					image.Point{x, y - 1}, image.Point{x - 1, y})
 			case '7':
 				diagram[image.Point{x, y}] = bound(xmax, ymax,
-					image.Point{x, y - 1}, image.Point{x - 1, y})
+					image.Point{x, y + 1}, image.Point{x - 1, y})
 			case 'F':
 				diagram[image.Point{x, y}] = bound(xmax, ymax,
-					image.Point{x, y - 1}, image.Point{x + 1, y})
+					image.Point{x, y + 1}, image.Point{x + 1, y})
 			}
 		}
-		lines[y] = strings.NewReplacer("7", "↰", "F", "↱", "J", "↲", "L", "↳").Replace(lines[y])
 	}
-	fmt.Println(start)
-	// s1 := 0
-	grid := updateGrid(make([][]string, len(lines)), len(lines[0]), start, "S")
+
+	s1 := 0
 	for _, p := range bound(len(lines[0])-1, len(lines)-1, surrounding(start)...) {
 		if adj, ok := diagram[p]; ok && slices.Contains(adj, start) {
-			grid = updateGrid(grid, len(lines)-1, p, ".")
-			last := start
-			current := p
-			pipe := []image.Point{last, current}
-			for current != start {
-				grid = updateGrid(grid, len(lines)-1, current, strings.Split(lines[current.Y], "")[current.X])
-				nextE := slices.IndexFunc(diagram[current], func(p image.Point) bool { return current != last })
-				last = current
-				current = diagram[current][nextE]
-				pipe = append(pipe, current)
-
-				utils.Printlns(grid[0:30]...)
+			pipe := day10findStart(start, p, start, diagram)
+			if len(pipe)/2 > s1 {
+				s1 = len(pipe) / 2
 			}
 		}
 	}
+	fmt.Println("Solution 1:", s1)
 	return nil
 }
 
